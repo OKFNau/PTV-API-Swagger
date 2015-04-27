@@ -1,0 +1,293 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.1",
+        "title": "PTV API",
+        "description": "An unofficial Swagger description of Public Transport Victoria's (non-realtime) Timetable API.  \"The API has been created to provide public transport timetable data to the public in the most dynamic and efficient way. By providing an API, rather than an enormous data file or database, PTV hopes to maximise both the opportunities for re-use of public transport data and the potential for innovation.\"\n"
+    },
+    "host": "timetableapi.ptv.vic.gov.au",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v2",
+    "produces": [
+        "application/json"
+    ],
+    "parameters": {
+        "devid": {
+            "name": "devid",
+            "in": "query",
+            "type": "number",
+            "format": "integer",
+            "required": true,
+            "description": "Your API key."
+        },
+        "signature": {
+            "name": "signature",
+            "in": "query",
+            "type": "string",
+            "required": true,
+            "description": "the customised message digest calculated using the method in the Quick start guide"
+        },
+        "latitude": {
+            "name": "latitude",
+            "in": "path",
+            "type": "number",
+            "required": true,
+            "description": "prescribed latitude, expressed in decimal degrees. e.g. -37.8"
+        },
+        "longitude": {
+            "name": "longitude",
+            "in": "path",
+            "type": "number",
+            "required": true,
+            "description": "prescribed longitude, expressed in decimal degrees. e.g. 144.9"
+        }
+    },
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "summary": "Verify your dev key and signature generation.",
+                "description": "A check on the timely availability, connectivity and reachability of the services that deliver security, caching and data to web clients. A health status report is returned.\n",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/devid"
+                    },
+                    {
+                        "$ref": "#/parameters/signature"
+                    },
+                    {
+                        "name": "timestamp",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time",
+                        "required": true,
+                        "description": "the date and time of the request in ISO 8601 UTC format e.g. 2013-11-13T05:24:25Z."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "HealthCheckResponse",
+                            "type": "object",
+                            "properties": {
+                                "securityCheckOk": {
+                                    "type": "boolean",
+                                    "description": "indicates whether your key is valid/signature is calculated correctly"
+                                },
+                                "clientClockOk": {
+                                    "type": "boolean",
+                                    "description": "indicates whether your clock is synchronised with our clock within 3 minutes"
+                                },
+                                "memCacheOK": {
+                                    "type": "boolean",
+                                    "description": "indicates status of the performance cache"
+                                },
+                                "databaseOK": {
+                                    "type": "boolean",
+                                    "description": "indicates availability of the data"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/nearme/latitude/{latitude}/longitude/{longitude}": {
+            "get": {
+                "summary": "Return up to 30 stops nearest to a specified coordinate.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/latitude"
+                    },
+                    {
+                        "$ref": "#/parameters/longitude"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "Stops nearby",
+                            "type": "object",
+                            "properties": {
+                                "suburb": {
+                                    "type": "string",
+                                    "description": "Name of suburb"
+                                },
+                                "transport_type": {
+                                    "type": "string",
+                                    "description": "Mode of transport serviced by the stop"
+                                },
+                                "stop_id": {
+                                    "type": "number",
+                                    "description": "Unique identifier of the stop"
+                                },
+                                "location_name": {
+                                    "type": "string",
+                                    "description": "Name of the stop based on a concise geographic description"
+                                },
+                                "lat": {
+                                    "type": "number",
+                                    "description": "Geographic coordinate of latitude"
+                                },
+                                "lon": {
+                                    "type": "number",
+                                    "description": "Geographic coordinate of longitude"
+                                },
+                                "distance": {
+                                    "type": "number",
+                                    "description": "Returns zero in this context"
+                                }
+                            },
+                            "example": {
+                                "suburb": "Belgrave",
+                                "transport_type": "train"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/poi/{poi}/lat1/{latitude1}/long1/{longitude1}/lat2/{latitude2}/long2/{longitude2}/griddepth/{griddepth}/limit/{limit}": {
+            "get": {
+                "summary": "Transport POIs by Map",
+                "description": "Transport POIs by Map returns a set of locations consisting of stops and/or myki ticket outlets (collectively known as points of interest – i.e. POIs) within a region demarcated on a map through a set of latitude and longitude coordinates.\n\nThrough the poi parameter, the API can return any combination of POIs (e.g. ticket outlets only, bus stops only, tram stops and ticket outlets only, all of the above, and so on).\n\nWhere POIs are geographically dispersed they are returned in a list; where they are geographically concentrated they can be returned in a cluster, depending on the map griddepth that is sent in the request.\n\nHave a play around with the griddepth parameter to see what best suits the device you are developing for. If you set griddepth to zero it will not cluster.\n\nYou can also set a limit of how many stops are listed in a cluster. The API will return what the total number of POIs is, however it will only return data for as many POIs are set by the limit. Check out the example response below for a better understanding of how this works.\n\nWhen there are more POIs in a cluster than the limit, the POIs returned will be determined by a business rule that is hard coded at the server end. The order of priority is V/Line stops first, followed by train, tram, bus, NightRider and, last of all, ticket outlets.\n",
+                "parameters": [
+                    {
+                        "name": "poi",
+                        "type": "number",
+                        "description": "a comma separated list of numbers representing the types of POIs you want returned, defined as follows:\n\n* 0 Train (metropolitan)\n* 1 Tram\n* 2 Bus (metropolitan and regional, but not V/Line)\n* 3 V/Line regional train and coach\n* 4 NightRider\n* 100 Ticket outlet\n\ne.g. 0,1,2,4,100 would return train, tram, bus, NightRider & ticket outlets\n",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "latitude1",
+                        "type": "number",
+                        "description": "latitude at the top left corner of a region depicted on a map, expressed in decimal degrees.",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "latitude2",
+                        "type": "number",
+                        "description": "latitude at the bottom right corner of a region depicted on a map, expressed in decimal degrees.",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "longitude1",
+                        "type": "number",
+                        "description": "longitude at the top left corner of a region depicted on a map, expressed in decimal degrees.",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "longitude2",
+                        "type": "number",
+                        "description": "longitude at the bottom right corner of a region depicted on a map, expressed in decimal degrees.",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "griddepth",
+                        "type": "number",
+                        "description": "the number of cells per block of cluster grid (between 0-20 inclusive).",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "number",
+                        "description": "the minimum number of POIs (stops or outlets) required to create a cluster, as well as the maximum number of POIs returned as part of a cluster in the JSON response (for example, if the limit is \"4\", at least 4 POIs are required to form a cluster; and in the JSON response, if there are 7 total locations in a cluster, only 4 will be listed in the response)",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a list of JSON objects which are either `locations` or `clusters`; `clusters` have their own list of `locations` within them. `locations` have either a `stop` or `outlet` (i.e. ticket outlet) object embedded within them. For more information on the data structures, check out the JSON object structure.",
+                        "schema": {
+                            "title": "Success",
+                            "type": "object",
+                            "properties": {
+                                "locations": {
+                                    "type": "array",
+                                    "description": "\"locations\" have either a \"stop\" or \"outlet\" (i.e. ticket outlet) object embedded within them.\n",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "suburb": {
+                                                "type": "string",
+                                                "description": "Suburb name"
+                                            },
+                                            "location_name": {
+                                                "type": "string"
+                                            },
+                                            "lat": {
+                                                "type": "number"
+                                            },
+                                            "lon": {
+                                                "type": "number"
+                                            },
+                                            "transport_type": {
+                                                "type": "string",
+                                                "description": "(stop only) the mode of transport servide by the stop: `train`, `tram`, `bus`, `vline`, `nightrider`"
+                                            },
+                                            "stop_id": {
+                                                "type": "number",
+                                                "description": "the unique identifier of each stop"
+                                            },
+                                            "outlet_type": {
+                                                "type": "string",
+                                                "description": "(outlet only) either \"stop\" meaning a myki card machine at a station or stop or \"retail\" meaning a shop of some kind\n"
+                                            }
+                                        }
+                                    }
+                                },
+                                "clusters": {
+                                    "type": "array",
+                                    "description": "\"clusters\" have their own list of \"locations\" within them\n",
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "suburb": {
+                                                    "type": "string",
+                                                    "description": "Suburb name"
+                                                },
+                                                "location_name": {
+                                                    "type": "string"
+                                                },
+                                                "lat": {
+                                                    "type": "number"
+                                                },
+                                                "lon": {
+                                                    "type": "number"
+                                                },
+                                                "transport_type": {
+                                                    "type": "string",
+                                                    "description": "(stop only) the mode of transport servide by the stop: `train`, `tram`, `bus`, `vline`, `nightrider`"
+                                                },
+                                                "stop_id": {
+                                                    "type": "number",
+                                                    "description": "the unique identifier of each stop"
+                                                },
+                                                "outlet_type": {
+                                                    "type": "string",
+                                                    "description": "(outlet only) either \"stop\" meaning a myki card machine at a station or stop or \"retail\" meaning a shop of some kind\n\n\n            \n"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
