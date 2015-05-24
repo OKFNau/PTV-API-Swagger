@@ -603,11 +603,35 @@
                             "title": "Departures",
                             "type": "array",
                             "description": "...",
-                            "items": [
-                                {
-                                    "$ref": "#/definitions/timetable_value"
-                                }
-                            ]
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "time_table_utc": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "time_realtime_utc": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "flags": {
+                                        "type": "string"
+                                    },
+                                    "platform": {
+                                        "$ref": "#/definitions/platform"
+                                    },
+                                    "run": {
+                                        "$ref": "#/definitions/run"
+                                    }
+                                },
+                                "required": [
+                                    "time_table_utc",
+                                    "time_realtime_utc",
+                                    "flags",
+                                    "platform",
+                                    "run"
+                                ]
+                            }
                         }
                     }
                 }
