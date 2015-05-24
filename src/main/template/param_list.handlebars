@@ -4,7 +4,7 @@
 <td class='code'>{{name}}</td>
 {{/if}}
 <td>
-  <select {{#isArray this}} multiple='multiple'{{/isArray}} class='parameter' name='{{name}}'>
+  <select {{#isArray this}} multiple='multiple'{{/isArray}} class={{#if required}}'parameter required'{{else}}'parameter'{{/if}} name='{{name}}'>
     {{#if required}}
     {{else}}
       {{#if default}}
@@ -24,6 +24,6 @@
     {{/each}}
   </select>
 </td>
-<td class="markdown">{{{description}}}</td>
+<td class="markdown">{{#if required}}<strong>{{/if}}{{{description}}}{{#if required}}</strong>{{/if}}</td>
 <td>{{{paramType}}}</td>
 <td><span class="model-signature"></span></td>
