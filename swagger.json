@@ -630,7 +630,27 @@
                                 "totalLocations",
                                 "clusters",
                                 "locations"
-                            ]
+                            ],
+                            "example": {
+                                "minLat": -37.81959,
+                                "minLong": 144.979126,
+                                "maxLat": -37.8157463,
+                                "maxLong": 144.9854,
+                                "weightedLat": -37.81671,
+                                "weightedLong": 144.982849,
+                                "totalLocations": 7,
+                                "locations": [
+                                    {
+                                        "suburb": "Melbourne City",
+                                        "transport_type": "tram",
+                                        "stop_id": 2171,
+                                        "location_name": "7B-Rod Laver Arena/Melbourne Park",
+                                        "lat": -37.81959,
+                                        "lon": 144.979126,
+                                        "distance": 0
+                                    }
+                                ]
+                            }
                         }
                     }
                 }
