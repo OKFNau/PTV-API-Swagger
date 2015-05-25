@@ -47,12 +47,15 @@ function devIdChange(ev) {
   });
 
   setCookie("ptv_devid", devid, 7);
+  $("input[name='devid']").trigger("change");
 }
 
 function devKeyChange(ev) {
   var devkey = $(this).val();
 
   setCookie("ptv_devkey", devkey, 7);
+  $("input[name='devid']").trigger("change");
+
 }
 function setCookie(cname, cvalue, exdays) {
   // from http://www.w3schools.com/js/js_cookies.asp dear god
@@ -80,7 +83,7 @@ function setSignatureHooks() {
     '<div class="input devkeybox">' +
     '<p><span class="label">Your developer ID: </span>' +     
     '<input placeholder="100001" id="input_devid" name="global-devid" type="text"/>' + 
-    '</p><p><span class="label"> Developer key: </span>' + 
+    '</p><p><span class="label"> Your developer key: </span>' + 
     '<input placeholder="12345678-abcd-1234-fgab-1234567890ab" id="input_devkey" name="apiKey" type="text"/>' + 
     "</p><span class='explain'>Don't have a key? <a href='mailto:APIKeyRequest@ptv.vic.gov.au'>Email PTV</a>.</span>" +
     '</div>'
