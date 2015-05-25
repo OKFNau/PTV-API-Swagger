@@ -27,7 +27,13 @@ function getURL(sandbox) {
 }
 
 function setSignatureHooks() {
+  $("#api_info").append(      
+    '<div class="input devkeybox">' +
+    'To play with the API, type your private developer key here: ' + 
+    '<input placeholder="12345678-abcd-1234-fgab-1234567890ab" id="input_devkey" name="apiKey" type="text"/></div>');
+
   $("#input_apiKey").hide();
+  $("#header").hide();
   // set all devids once you change one.
   $("input[name='devid']").change(function(ev) {
     var devid = $(this).val();
