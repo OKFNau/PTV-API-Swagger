@@ -28,6 +28,14 @@ function getURL(sandbox) {
 
 function setSignatureHooks() {
   $("#input_apiKey").hide();
+  // set all devids once you change one.
+  $("input[name='devid']").change(function(ev) {
+    var devid = $(this).val();
+    $("input[name='devid']").each(function(i, e) {
+      $(e).val(devid); 
+    });
+  });
+
   $(".sandbox").each(function(i,sandbox) {
     var sigbox = $(sandbox).find("input[name='signature']");
     var devid = $(sandbox).find("input[name='devid']").val();
