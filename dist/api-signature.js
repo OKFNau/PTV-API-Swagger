@@ -82,7 +82,7 @@ function setSignatureHooks() {
     '<input placeholder="100001" id="input_devid" name="global-devid" type="text"/>' + 
     '</p><p><span class="label"> Developer key: </span>' + 
     '<input placeholder="12345678-abcd-1234-fgab-1234567890ab" id="input_devkey" name="apiKey" type="text"/>' + 
-    "</p><span class='explain'>You'll need these to play with the API.</span>" +
+    "</p><span class='explain'>Don't have a key? <a href='mailto:APIKeyRequest@ptv.vic.gov.au'>Email PTV</a>.</span>" +
     '</div>'
 
     );
@@ -105,6 +105,7 @@ function setSignatureHooks() {
   // set all devids once you change one.
   $("input[name='devid'],#input_devid").change(devIdChange);
   $("#input_devkey").change(devKeyChange);
+  $("input[name='timestamp']").trigger("change");
 
 
 }
