@@ -12,7 +12,7 @@
     },
     "host": "timetableapi.ptv.vic.gov.au",
     "schemes": [
-        "https"
+        "http"
     ],
     "produces": [
         "application/json"
