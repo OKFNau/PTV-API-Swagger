@@ -3,7 +3,7 @@
     "info": {
         "version": "2.0.0",
         "title": "PTV Timetable API",
-        "description": "This is an unofficial, incomplete description of Public Transport Victoria's (non-realtime) Timetable API, created by Steve Bennett (stevage@gmail.com, @stevage1) for Open Knowledge Australia. )\n\nAlternatives: Steve's [complete, non-Swagger documentation](http://stevage.github.io/PTV-API-doc/) or PTV's [Original MS Word documentation](https://www.data.vic.gov.au/data/dataset//ptv-timetable-api)\n\nLicence: [Creative Commons 3.0 Attribution](creativecommons.org/licenses/by/3.0/au/) (Attribute \"Public Transport Victoria\" and \"Steve Bennett\")\n",
+        "description": "This is an unofficial description of Public Transport Victoria's (non-realtime) <a href=\"https://www.data.vic.gov.au/data/dataset//ptv-timetable-api\">Timetable API</a>, created by <a href=\"http://stevebennett.me\">Steve Bennett</a> (stevage@gmail.com, <a href=\"https://twitter.com/stevage1\">@stevage1</a>) for Open Knowledge Australia. It was not funded or supported by PTV.\n\nAlternatives: Steve's [documentation](http://stevage.github.io/PTV-API-doc/)\n\nLicence: [Creative Commons 3.0 Attribution](creativecommons.org/licenses/by/3.0/au/) (Attribute \"Public Transport Victoria\" and \"Steve Bennett\")\n",
         "license": {
             "url": "https://creativecommons.org/licenses/by/3.0/au/",
             "name": "Creative Commons Attribution 3.0 Australia"
