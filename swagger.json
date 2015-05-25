@@ -426,7 +426,7 @@
         "/v2/healthcheck": {
             "get": {
                 "summary": "Health Check",
-                "description": "A check on the timely availability, connectivity and reachability of the services that deliver security, caching and data to web clients. A health status report is returned.\n\nEvery API call, including this one, requires a \"signature\" parameter. This is an         \nHMAC-SHA1 hash of the whole request, computed as `crypto.HMACSHA1(request,key)`, where:\n  * `request` is the URL from `/v2` up to and including the `devid=` parameter\n  * `key` is your private API key\n",
+                "description": "A check on the timely availability, connectivity and reachability of the services that deliver security, caching and data to web clients. A health status report is returned.\n\nEvery API call, including this one, requires a \"signature\" parameter. This is an         \nuppercase HMAC-SHA1 hash of the whole request, computed as `crypto.HMACSHA1(request,key).toUppercase()`, where:\n  * `request` is the URL from `/v2` up to and including the `devid=` parameter\n  * `key` is your private API key\n",
                 "parameters": [
                     {
                         "name": "timestamp",
