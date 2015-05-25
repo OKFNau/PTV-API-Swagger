@@ -69,6 +69,7 @@
         },
         "stop_id": {
             "type": "number",
+            "format": "integer",
             "description": "the unique identifier of each stop"
         },
         "location_name": {
@@ -247,10 +248,12 @@
             "properties": {
                 "linedir_id": {
                     "type": "number",
+                    "format": "integer",
                     "description": "unique identifier of a particular line and direction. e.g. \"21\""
                 },
                 "direction_id": {
                     "type": "number",
+                    "format": "integer",
                     "description": "unique identifier of a direction (e.g. \"0\" signifies \"city\")"
                 },
                 "direction_name": {
@@ -273,6 +276,7 @@
             "properties": {
                 "realtime_id": {
                     "type": "number",
+                    "format": "integer",
                     "description": "a place holder for the stop's real-time feed system ID (for potential future implementation; as no real-time feeds are provided at this time, this returns \"0\")"
                 },
                 "stop": {
@@ -408,9 +412,9 @@
         "stoplimit": {
             "name": "limit",
             "type": "number",
+            "format": "integer",
             "in": "path",
             "required": true,
-            "format": "integer",
             "description": "the number of next departure times to be returned, i.e. `5` will return the next five\ndeparture times (notes: `0` will return departures for the entire day; `1` will limit\nit to the very next departure, even if this is a few days away)\n"
         },
         "for_utc": {
@@ -547,6 +551,7 @@
                     {
                         "name": "griddepth",
                         "type": "number",
+                        "format": "integer",
                         "description": "the number of cells per block of cluster grid (between 0-20 inclusive).",
                         "in": "path",
                         "required": true
@@ -554,6 +559,7 @@
                     {
                         "name": "limit",
                         "type": "number",
+                        "format": "integer",
                         "description": "the minimum number of POIs (stops or outlets) required to create a cluster, as well as the maximum number of POIs returned as part of a cluster in the JSON response (for example, if the limit is \"4\", at least 4 POIs are required to form a cluster; and in the JSON response, if there are 7 total locations in a cluster, only 4 will be listed in the response)",
                         "in": "path",
                         "required": true
