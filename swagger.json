@@ -3,7 +3,7 @@
     "info": {
         "version": "2.0.0",
         "title": "PTV API",
-        "description": "This is an unofficial, incomplete description of Public Transport Victoria's (non-realtime) Timetable API, created by Steve Bennett (stevage@gmail.com, @stevage1) for Open Knowledge Australia. )\n\nAlternatives: Steve's [complete, non-Swagger documentation](http://stevage.github.io/PTV-API-doc/) or PTV's [Original MS Word documentation](https://www.data.vic.gov.au/data/dataset//ptv-timetable-api)\n\n**Please note**: the Swagger text boxes and buttons won't work, since they don't compute the signature required by the API\n\nLicence: [Creative Commons 3.0 Attribution](creativecommons.org/licenses/by/3.0/au/) (Attribute \"Public Transport Victoria\" and \"Steve Bennett\")\n",
+        "description": "This is an unofficial, incomplete description of Public Transport Victoria's (non-realtime) Timetable API, created by Steve Bennett (stevage@gmail.com, @stevage1) for Open Knowledge Australia. )\n\nAlternatives: Steve's [complete, non-Swagger documentation](http://stevage.github.io/PTV-API-doc/) or PTV's [Original MS Word documentation](https://www.data.vic.gov.au/data/dataset//ptv-timetable-api)\n\n**Please note**: To try these functions out, you must put your PRIVATE developer key in the box at the top. (It's a long string of hex digits. The developer ID (1000xxx) goes in each call.\n\nLicence: [Creative Commons 3.0 Attribution](creativecommons.org/licenses/by/3.0/au/) (Attribute \"Public Transport Victoria\" and \"Steve Bennett\")\n",
         "license": {
             "url": "https://creativecommons.org/licenses/by/3.0/au/",
             "name": "Creative Commons Attribution 3.0 Australia"
