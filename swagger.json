@@ -18,6 +18,10 @@
         "application/json"
     ],
     "definitions": {
+        "flags": {
+            "type": "string",
+            "description": "Hyphen (-) separated list of stop options.  RR = Reservations Required; GC = Guaranteed Connection; DOO = Drop Off Only; PUO = Pick Up Only; MO = Mondays only; TU = Tuesdays only; WE = Wednesdays only; TH = Thursdays only; FR = Fridays only; SS = School days only; note: ignore \"E\" flag\n"
+        },
         "cluster": {
             "type": "object",
             "properties": {
@@ -34,46 +38,74 @@
         },
         "searchresult": {
             "type": "object",
+            "required": [
+                "type",
+                "result"
+            ],
             "properties": {
                 "type": {
                     "type": "string",
-                    "description": "either `stop or `line`. There will be either a `stop` or `line` object corresponding."
+                    "description": "'stop' or 'line'"
                 },
-                "stop": {
-                    "$ref": "#/definitions/stop"
-                },
-                "line": {
-                    "$ref": "#/definitions/line"
+                "result": {
+                    "description": "Stops have transport_type, suburb, location_name, lat, lon, distance, stop_id. \nLines have transport_type, line,   line_name, line_number\n",
+                    "$ref": "#/definitions/line_or_stop"
                 }
             }
+        },
+        "transport_type": {
+            "type": "string",
+            "description": "(stop only) the mode of transport serviced by the stop: `train`, `tram`, `bus`, `vline`, `nightrider`"
+        },
+        "lat": {
+            "description": "latitude in decimal degrees, eg -37.82005",
+            "type": "number",
+            "example": -37.82005
+        },
+        "lon": {
+            "description": "longitude in decimal degrees, eg 144.959047",
+            "type": "number",
+            "example": 144.959047
+        },
+        "stop_id": {
+            "type": "number",
+            "description": "the unique identifier of each stop"
+        },
+        "location_name": {
+            "type": "string",
+            "description": "the name of the stop based on a concise geographic description. e.g. \"20-Barkly Square/115 Sydney Rd (Brunswic"
+        },
+        "suburb": {
+            "type": "string",
+            "description": "Suburb name"
+        },
+        "distance": {
+            "type": "number",
+            "description": "Returns zero. \"It is a legacy attribute of unknown worth\""
         },
         "location": {
             "type": "object",
             "properties": {
                 "suburb": {
-                    "type": "string",
-                    "description": "Suburb name"
+                    "$ref": "#/definitions/suburb"
                 },
                 "location_name": {
-                    "type": "string"
+                    "$ref": "#/definitions/location_name"
                 },
                 "lat": {
-                    "type": "number"
+                    "$ref": "#/definitions/lat"
                 },
                 "lon": {
-                    "type": "number"
+                    "$ref": "#/definitions/lon"
                 },
                 "distance": {
-                    "type": "number",
-                    "description": "Returns `0` in the context of this API"
+                    "$ref": "#/definitions/distance"
                 },
                 "transport_type": {
-                    "type": "string",
-                    "description": "(stop only) the mode of transport servide by the stop: `train`, `tram`, `bus`, `vline`, `nightrider`"
+                    "$ref": "#/definitions/transport_type"
                 },
                 "stop_id": {
-                    "type": "number",
-                    "description": "the unique identifier of each stop"
+                    "$ref": "#/definitions/stop_id"
                 },
                 "outlet_type": {
                     "type": "string",
@@ -91,36 +123,67 @@
                 "outlet_type"
             ]
         },
+        "line_or_stop": {
+            "type": "object",
+            "required": [
+                "transport_type"
+            ],
+            "properties": {
+                "transport_type": {
+                    "$ref": "#/definitions/transport_type"
+                },
+                "suburb": {
+                    "$ref": "#/definitions/suburb"
+                },
+                "location_name": {
+                    "$ref": "#/definitions/location_name"
+                },
+                "lat": {
+                    "$ref": "#/definitions/lat"
+                },
+                "lon": {
+                    "$ref": "#/definitions/lon"
+                },
+                "distance": {
+                    "$ref": "#/definitions/distance"
+                },
+                "stop_id": {
+                    "$ref": "#/definitions/stop_id"
+                },
+                "line_id": {
+                    "$ref": "#/definitions/line_id"
+                },
+                "line_name": {
+                    "$ref": "#/definitions/line_name"
+                },
+                "line_number": {
+                    "$ref": "#/definitions/line_number"
+                }
+            }
+        },
         "stop": {
             "type": "object",
             "properties": {
                 "suburb": {
-                    "type": "string",
-                    "description": "Suburb name"
+                    "$ref": "#/definitions/suburb"
                 },
                 "location_name": {
-                    "description": "the name of the stop based on a concise geographic description. e.g. \"20-Barkly Square/115 Sydney Rd (Brunswick)\"",
-                    "type": "string"
+                    "$ref": "#/definitions/location_name"
                 },
                 "lat": {
-                    "description": "latitude of stop in decimal degrees, eg -37.82005",
-                    "type": "number"
+                    "$ref": "#/definitions/lat"
                 },
                 "lon": {
-                    "description": "longitude of stop in decimal degrees, eg 144.959047",
-                    "type": "number"
+                    "$ref": "#/definitions/lon"
                 },
                 "distance": {
-                    "type": "number",
-                    "description": "Returns `0` in the context of this API"
+                    "$ref": "#/definitions/distance"
                 },
                 "transport_type": {
-                    "type": "string",
-                    "description": "(stop only) the mode of transport serviced by the stop: `train`, `tram`, `bus`, `vline`, `nightrider`"
+                    "$ref": "#/definitions/transport_type"
                 },
                 "stop_id": {
-                    "type": "number",
-                    "description": "the unique identifier of each stop"
+                    "$ref": "#/definitions/stop_id"
                 }
             },
             "required": [
@@ -130,26 +193,46 @@
                 "lon",
                 "distance",
                 "stop_id"
-            ]
+            ],
+            "example": {
+                "result": {
+                    "suburb": "East Melbourne",
+                    "transport_type": "tram",
+                    "stop_id": 2825,
+                    "location_name": "Clarendon St/Wellington Pde #11",
+                    "lat": -37.81603,
+                    "lon": 144.9824,
+                    "distance": 0.00000408647838
+                }
+            }
+        },
+        "line_id": {
+            "type": "string",
+            "description": "(numeric string) the unique identifier of each line"
+        },
+        "line_name": {
+            "type": "string",
+            "description": "the name of the line.",
+            "example": "970 - City - Frankston - Mornington - Rosebud via Nepean Highway & Frankston Station"
+        },
+        "line_number": {
+            "type": "string",
+            "description": "the line number that is presented to the public (i.e. not the \"line_id\")"
         },
         "line": {
             "type": "object",
             "properties": {
                 "transport_type": {
-                    "type": "string",
-                    "description": "the mode of transport serviced by the line. e.g. \"train\", \"tram\", \"bus\", \"V/Line\" or \"NightRider\""
+                    "$ref": "#/definitions/transport_type"
                 },
                 "line_id": {
-                    "type": "string",
-                    "description": "(numeric string) the unique identifier of each line"
+                    "$ref": "#/definitions/line"
                 },
                 "line_name": {
-                    "type": "string",
-                    "description": "the name of the line. e.g. \"970 - City - Frankston - Mornington - Rosebud via Nepean Highway & Frankston Station\""
+                    "$ref": "#/definitions/line_name"
                 },
                 "line_number": {
-                    "type": "string",
-                    "description": "the line number that is presented to the public (i.e. not the \"line_id\")"
+                    "$ref": "#/definitions/line_number"
                 }
             },
             "required": [
@@ -209,19 +292,28 @@
             "type": "object",
             "properties": {
                 "transport_type": {
-                    "type": "number"
+                    "$ref": "#/definitions/transport_type"
                 },
                 "run_id": {
-                    "type": "number"
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The unique identifier of the run"
                 },
                 "num_skipped": {
-                    "type": "number"
+                    "type": "number",
+                    "format": "integer",
+                    "description": "the number of stops skipped for the run, applicable to train; a number greater than zero indicates either a \nlimited express or express service\n"
                 },
                 "destination_id": {
-                    "type": "number"
+                    "type": "number",
+                    "format": "integer",
+                    "description": "The stop_id of the destination, i.e. the last stop for the run",
+                    "example": 1044
                 },
                 "destination_name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The location_name of the destination, i.e. the last stop for the run",
+                    "example": "Craigieburn"
                 }
             },
             "required": [
@@ -244,7 +336,7 @@
                     "format": "date"
                 },
                 "flags": {
-                    "type": "string"
+                    "$ref": "#/definitions/flags"
                 },
                 "platform": {
                     "$ref": "#/definitions/platform"
@@ -283,14 +375,14 @@
             "in": "path",
             "type": "number",
             "required": true,
-            "description": "prescribed latitude, expressed in decimal degrees. \ne.g. `-37.8`\n"
+            "description": "prescribed latitude, in decimal degrees. \ne.g. `-37.8`\n"
         },
         "longitude": {
             "name": "longitude",
             "in": "path",
             "type": "number",
             "required": true,
-            "description": "prescribed longitude, expressed in decimal degrees. e.g. `144.9`\n"
+            "description": "prescribed longitude, in decimal degrees. e.g. `144.9`\n"
         },
         "mode": {
             "name": "mode",
@@ -390,6 +482,12 @@
                     },
                     {
                         "$ref": "#/parameters/longitude"
+                    },
+                    {
+                        "$ref": "#/parameters/devid"
+                    },
+                    {
+                        "$ref": "#/parameters/signature"
                     }
                 ],
                 "responses": {
@@ -400,10 +498,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/stop"
-                            },
-                            "example": {
-                                "suburb": "Belgrave",
-                                "transport_type": "train"
                             }
                         }
                     }
@@ -417,7 +511,7 @@
                 "parameters": [
                     {
                         "name": "poi",
-                        "type": "number",
+                        "type": "string",
                         "description": "a comma separated list of numbers representing the types of POIs you want returned, defined as follows:\n\n* `0` Train (metropolitan)\n* `1` Tram\n* `2` Bus (metropolitan and regional, but not V/Line)\n* `3` V/Line regional train and coach\n* `4` NightRider\n* `100` Ticket outlet\n\ne.g. `0,1,2,4,100` would return train, tram, bus, NightRider & ticket outlets\n",
                         "in": "path",
                         "required": true
@@ -545,7 +639,7 @@
         "/v2/search/{searchtext}": {
             "get": {
                 "summary": "Search",
-                "description": "The Search API returns all stops and lines that match the input search text.         \n",
+                "description": "The Search API returns all stops and lines that match the input search text.         \n\nNote: It will only return “line” objects if the input search text is less than three (3) characters.\n",
                 "parameters": [
                     {
                         "name": "searchtext",
@@ -569,7 +663,30 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/searchresult"
-                            }
+                            },
+                            "example": [
+                                {
+                                    "type": "line",
+                                    "result": {
+                                        "transport_type": "tram",
+                                        "line_id": 5313,
+                                        "line_name": "Route 31 - Hoddle Street - Victoria Harbour Docklands",
+                                        "line_number": "Route 31"
+                                    }
+                                },
+                                {
+                                    "type": "stop",
+                                    "result": {
+                                        "suburb": "East Melbourne",
+                                        "transport_type": "tram",
+                                        "stop_id": 2825,
+                                        "location_name": "Clarendon St/Wellington Pde #11",
+                                        "lat": -37.81603,
+                                        "lon": 144.9824,
+                                        "distance": 0.00000408647838
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -601,36 +718,54 @@
                         "description": "Returns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object embedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in them, and the \"direction\" object has a \"line\" object within it.",
                         "schema": {
                             "title": "Departures",
-                            "type": "array",
-                            "description": "...",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "time_table_utc": {
-                                        "type": "string",
-                                        "format": "date"
+                            "type": "object",
+                            "required": [
+                                "values"
+                            ],
+                            "properties": {
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/timetable_value"
                                     },
-                                    "time_realtime_utc": {
-                                        "type": "string",
-                                        "format": "date"
-                                    },
-                                    "flags": {
-                                        "type": "string"
-                                    },
-                                    "platform": {
-                                        "$ref": "#/definitions/platform"
-                                    },
-                                    "run": {
-                                        "$ref": "#/definitions/run"
-                                    }
-                                },
-                                "required": [
-                                    "time_table_utc",
-                                    "time_realtime_utc",
-                                    "flags",
-                                    "platform",
-                                    "run"
-                                ]
+                                    "example": [
+                                        {
+                                            "platform": {
+                                                "realtime_id": 0,
+                                                "stop": {
+                                                    "suburb": "East Melbourne",
+                                                    "transport_type": "train",
+                                                    "stop_id": 1104,
+                                                    "location_name": "Jolimont-MCG",
+                                                    "lat": -37.81653,
+                                                    "lon": 144.9841,
+                                                    "distance": 0
+                                                }
+                                            },
+                                            "direction": {
+                                                "linedir_id": 38,
+                                                "direction_id": 5,
+                                                "direction_name": "South Morang",
+                                                "line": {
+                                                    "transport_type": "train",
+                                                    "line_id": 5,
+                                                    "line_name": "South Morang",
+                                                    "line_number": "South Morang"
+                                                }
+                                            },
+                                            "run": {
+                                                "transport_type": "train",
+                                                "run_id": 13975,
+                                                "num_skipped": 0,
+                                                "destination_id": 1224,
+                                                "destination_name": "South Morang"
+                                            },
+                                            "time_timetable_utc": 2014,
+                                            "time_realtime_utc": null,
+                                            "flags": null
+                                        }
+                                    ]
+                                }
                             }
                         }
                     }
@@ -676,12 +811,55 @@
                         "description": "Returns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object embedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in them, and the \"direction\" object has a \"line\" object within it.",
                         "schema": {
                             "title": "Departures",
-                            "type": "array",
-                            "items": [
-                                {
-                                    "$ref": "#/definitions/timetable_value"
+                            "type": "object",
+                            "required": [
+                                "values"
+                            ],
+                            "properties": {
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/timetable_value"
+                                    },
+                                    "example": [
+                                        {
+                                            "platform": {
+                                                "realtime_id": 0,
+                                                "stop": {
+                                                    "suburb": "East Melbourne",
+                                                    "transport_type": "train",
+                                                    "stop_id": 1104,
+                                                    "location_name": "Jolimont-MCG",
+                                                    "lat": -37.81653,
+                                                    "lon": 144.9841,
+                                                    "distance": 0
+                                                },
+                                                "direction": {
+                                                    "linedir_id": 41,
+                                                    "direction_id": 8,
+                                                    "direction_name": "Hurstbridge",
+                                                    "line": {
+                                                        "transport_type": "train",
+                                                        "line_id": 8,
+                                                        "line_name": "Hurstbridge",
+                                                        "line_number": "Hurstbridge"
+                                                    }
+                                                }
+                                            },
+                                            "run": {
+                                                "transport_type": "train",
+                                                "run_id": 21172,
+                                                "num_skipped": 0,
+                                                "destination_id": 1041,
+                                                "destination_name": "Clifton Hill"
+                                            },
+                                            "time_timetable_utc": "2014-01-20T03:21:00.000Z",
+                                            "time_realtime_utc": null,
+                                            "flags": null
+                                        }
+                                    ]
                                 }
-                            ]
+                            }
                         }
                     }
                 }
@@ -720,12 +898,55 @@
                         "description": "",
                         "schema": {
                             "title": "Stopping pattern",
-                            "type": "array",
-                            "items": [
-                                {
-                                    "$ref": "#/definitions/timetable_value"
+                            "type": "object",
+                            "required": [
+                                "values"
+                            ],
+                            "properties": {
+                                "values": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/timetable_value"
+                                    },
+                                    "example": [
+                                        {
+                                            "platform": {
+                                                "realtime_id": 0,
+                                                "stop": {
+                                                    "suburb": "Melbourne City",
+                                                    "transport_type": "train",
+                                                    "stop_id": 1071,
+                                                    "location_name": "Flinders Street",
+                                                    "lat": -37.81831,
+                                                    "lon": 144.966965,
+                                                    "distance": 0
+                                                },
+                                                "direction": {
+                                                    "linedir_id": 0,
+                                                    "direction_id": 8,
+                                                    "direction_name": "Hurstbridge",
+                                                    "line": {
+                                                        "transport_type": "train",
+                                                        "line_id": 8,
+                                                        "line_name": "Hurstbridge",
+                                                        "line_number": "Hurstbridge"
+                                                    }
+                                                }
+                                            },
+                                            "run": {
+                                                "transport_type": "train",
+                                                "run_id": 21173,
+                                                "num_skipped": 0,
+                                                "destination_id": 0,
+                                                "destination_name": null
+                                            },
+                                            "time_timetable_utc": "2014-01-20T03:19:00.000Z",
+                                            "time_realtime_utc": null,
+                                            "flags": null
+                                        }
+                                    ]
                                 }
-                            ]
+                            }
                         }
                     }
                 }
@@ -757,7 +978,18 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/stop"
-                            }
+                            },
+                            "example": [
+                                {
+                                    "suburb": "Plenty",
+                                    "transport_type": "bus",
+                                    "stop_id": 28066,
+                                    "location_name": "200 Yan Yean Rd",
+                                    "lat": -37.6616554,
+                                    "lon": 145.124359,
+                                    "distance": 0
+                                }
+                            ]
                         }
                     }
                 }
