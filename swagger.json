@@ -1,9 +1,9 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "2.0.0",
+        "version": "2.1.0",
         "title": "PTV Timetable API (unofficial)",
-        "description": "This is Open Knowledge Australia's documentation for Public Transport Victoria's <a href=\"https://www.data.vic.gov.au/data/dataset/ptv-timetable-api\">Timetable API</a>, built with [Swagger](https://github.com/swagger-api/swagger-ui). It was created by <a href=\"http://stevebennett.me\">Steve Bennett</a> (stevage@gmail.com, <a href=\"https://twitter.com/stevage1\">@stevage1</a>) for Open Knowledge Australia. It was not funded or supported by PTV.\n\nThe Timetable API lets you find stations and stops in a given area, query the next few departures from a stop, and the stops on a given line or service. It does not provide real-time data, spatial data other than stop locations, or route planning. PTV's documentation remains the definitive source. Report issues in this documentation in [GitHub](https://github.com/OKFNau/PTV-API-Swagger/issues). \n\n<h2>Related tools</h2>\n\n  * [PtvPy Python library](https://github.com/stevage/ptvpy) by Steve Bennett\n  * [Test harness for PHP](https://github.com/wongm/ptv-api-php-test-harness) by Marcus Wong\n  * [.NET Portable Class Library](https://github.com/Readify/ptv) by Mitch Denny (Readify)\n  * [PTVGlass ](https://github.com/longzheng/PTVGlass) (C#) by Long Zheng\n  * [Previous non-Swagger version of this documentation](http://stevage.github.io/PTV-API-doc/) by Steve Bennett\n  \n<h3>Related data</h3>\n  * [PTV timetable data in GTFS format](https://www.data.vic.gov.au/data/dataset/ptv-timetable-and-geographic-information-2015-gtfs)\n  * [PTV spatial data in shapefile format](https://www.data.vic.gov.au/data/dataset/public-transport-a-collection-of-ptv-datasets)\n\n<h2>Licence</h2>\n[Creative Commons 3.0 Attribution](https://creativecommons.org/licenses/by/3.0/au/) (Attribute \"Public Transport Victoria\" and \"Steve Bennett\")\n",
+        "description": "This is Open Knowledge Australia's documentation for Public Transport Victoria's <a href=\"https://www.data.vic.gov.au/data/dataset/ptv-timetable-api\">Timetable API</a>, built with [Swagger](https://github.com/swagger-api/swagger-ui). It was created by <a href=\"http://stevebennett.me\">Steve Bennett</a> (stevage@gmail.com, <a href=\"https://twitter.com/stevage1\">@stevage1</a>) for Open Knowledge Australia. It was not funded or supported by PTV.\n\nThe Timetable API lets you find stations and stops in a given area, query the next few departures from a stop, and the stops on a given line or service. It does not provide real-time data, spatial data other than stop locations, or route planning. PTV's documentation remains the definitive source. Report issues in this documentation in [GitHub](https://github.com/OKFNau/PTV-API-Swagger/issues). \n\n##Related tools\n  * [Additional PTV reference material](https://ptv.vic.gov.au/about-ptv/ptv-data-and-reports/digital-products/ptv-timetable-api/)\n  * [PtvPy Python library](https://github.com/stevage/ptvpy) by Steve Bennett\n  * [Test harness for PHP](https://github.com/wongm/ptv-api-php-test-harness) by Marcus Wong\n  * [.NET Portable Class Library](https://github.com/Readify/ptv) by Mitch Denny (Readify)\n  * [PTVGlass ](https://github.com/longzheng/PTVGlass) (C#) by Long Zheng\n  * [Previous non-Swagger version of this documentation](http://stevage.github.io/PTV-API-doc/) by Steve Bennett\n  \n##Related data\n  * [PTV timetable data in GTFS format](https://www.data.vic.gov.au/data/dataset/ptv-timetable-and-geographic-information-2015-gtfs)\n  * [PTV spatial data in shapefile format](https://www.data.vic.gov.au/data/dataset/public-transport-a-collection-of-ptv-datasets)\n\n##Licence\n[Creative Commons 3.0 Attribution](https://creativecommons.org/licenses/by/3.0/au/) (Attribute \"Public Transport Victoria\" and \"Steve Bennett\")\n",
         "license": {
             "url": "https://creativecommons.org/licenses/by/3.0/au/",
             "name": "Creative Commons Attribution 3.0 Australia"
@@ -326,11 +326,15 @@
             "properties": {
                 "time_table_utc": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date",
+                    "description": "the scheduled time of the service at the stop, in ISO 8601 UTC",
+                    "example": "2014-11-18T03:21:00Z"
                 },
                 "time_realtime_utc": {
                     "type": "string",
-                    "format": "date"
+                    "format": "date",
+                    "description": "the real-time of the service at the stop if this is available, in ISO 8601 UTC. Available for trams and some bus routes; if the relevant feed system is not available, it will return null",
+                    "example": "2014-11-18T03:24:00Z"
                 },
                 "flags": {
                     "$ref": "#/definitions/flags"
@@ -349,6 +353,96 @@
                 "platform",
                 "run"
             ]
+        },
+        "disruptions": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/disruption"
+            }
+        },
+        "disruption": {
+            "type": "object",
+            "required": [
+                "title",
+                "url",
+                "description",
+                "publishedOn"
+            ],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "a headline or title summarising the disruption information",
+                    "example": "Buses replacing trains on the Cranbourne and Pakenham lines after 8.45pm: Saturday 15 February 2014"
+                },
+                "url": {
+                    "type": "string",
+                    "description": "the url of the relevant article on the PTV website",
+                    "example": "http://ptv.vic.gov.au/disruptions/buses-replacing-trains-on-thecranbourne-and-pakenham-lines-after-8-45pm-saturday-15-february-2014/"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "a truncated version of the description of the disruption that appears on the PTV website",
+                    "example": "Due to signalling upgrades and construction work as part of the Springvale Level Crossing Removal, buses will replace all trains between Westall and Dandenong after 8.45pm on Saturday 15 February."
+                },
+                "publishedOn": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "the date and time the disruption information is published on the PTV website, in ISO 8601 UTC format",
+                    "example": "“2014-01-29T23:30:54Z"
+                }
+            }
+        },
+        "departures": {
+            "title": "Departures",
+            "type": "object",
+            "required": [
+                "values"
+            ],
+            "properties": {
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/timetable_value"
+                    },
+                    "example": [
+                        {
+                            "platform": {
+                                "realtime_id": 0,
+                                "stop": {
+                                    "suburb": "East Melbourne",
+                                    "transport_type": "train",
+                                    "stop_id": 1104,
+                                    "location_name": "Jolimont-MCG",
+                                    "lat": -37.81653,
+                                    "lon": 144.9841,
+                                    "distance": 0
+                                },
+                                "direction": {
+                                    "linedir_id": 41,
+                                    "direction_id": 8,
+                                    "direction_name": "Hurstbridge",
+                                    "line": {
+                                        "transport_type": "train",
+                                        "line_id": 8,
+                                        "line_name": "Hurstbridge",
+                                        "line_number": "Hurstbridge"
+                                    }
+                                }
+                            },
+                            "run": {
+                                "transport_type": "train",
+                                "run_id": 21172,
+                                "num_skipped": 0,
+                                "destination_id": 1041,
+                                "destination_name": "Clifton Hill"
+                            },
+                            "time_timetable_utc": "2014-01-20T03:21:00.000Z",
+                            "time_realtime_utc": null,
+                            "flags": null
+                        }
+                    ]
+                }
+            }
         }
     },
     "parameters": {
@@ -385,7 +479,7 @@
             "in": "path",
             "type": "string",
             "required": true,
-            "description": "a number representing the `transport_type` of the stop, defined as follows:\n\n  * `0` Train (metropolitan)\n  * `1` Tram\n  * `2` Bus (metropolitan and regional, but not V/Line)\n  * `3` V/Line train and coach\n  * `4` NightRider\n"
+            "description": "A number representing the `transport_type` of the stop, defined as follows:\n\n  * `0` Train (metropolitan)\n  * `1` Tram\n  * `2` Bus (metropolitan and regional, but not V/Line)\n  * `3` V/Line train and coach\n  * `4` NightRider\n"
         },
         "stop": {
             "name": "stop",
@@ -406,7 +500,7 @@
             "type": "integer",
             "in": "path",
             "required": true,
-            "description": "the number of next departure times to be returned, i.e. `5` will return the next five\ndeparture times (notes: `0` will return departures for the entire day; `1` will limit\nit to the very next departure, even if this is a few days away)\n"
+            "description": "The number of next departure times to be returned, i.e. `5` will return the next five\ndeparture times (notes: `0` will return departures for the entire day; `1` will limit\nit to the very next departure, even if this is a few days away)\n"
         },
         "for_utc": {
             "name": "for_utc",
@@ -421,7 +515,7 @@
         "/v2/healthcheck": {
             "get": {
                 "summary": "Health Check",
-                "description": "A check on the timely availability, connectivity and reachability of the services that deliver security, caching and data to web clients. A health status report is returned.\n\nEvery API call, including this one, requires a \"signature\" parameter. This is an         \nuppercase HMAC-SHA1 hash of the whole request, computed as `crypto.HMACSHA1(request,key).toUppercase()`, where:\n  * `request` is the URL from `/v2` up to and including the `devid=` parameter\n  * `key` is your private API key\n",
+                "description": "A check on the timely availability, connectivity and reachability of the services that deliver security, caching and data to web clients. A health status report is returned.\n\n### Signature\nEvery API call, including this one, requires a \"signature\" parameter. This is an         \nuppercase HMAC-SHA1 hash of the whole request, computed as `crypto.HMACSHA1(request,key).toUppercase()`, where:\n  * `request` is the URL from `/v2` up to and including the `devid=` parameter\n  * `key` is your private API key\n",
                 "parameters": [
                     {
                         "name": "timestamp",
@@ -502,7 +596,7 @@
         "/v2/poi/{poi}/lat1/{latitude1}/long1/{longitude1}/lat2/{latitude2}/long2/{longitude2}/griddepth/{griddepth}/limit/{limit}": {
             "get": {
                 "summary": "Transport POIs by Map",
-                "description": "Transport POIs by Map returns a set of locations consisting of stops and/or myki ticket outlets (collectively known as points of interest – i.e. POIs) within a region demarcated on a map through a set of latitude and longitude coordinates.\n\nThrough the poi parameter, the API can return any combination of POIs (e.g. ticket outlets only, bus stops only, tram stops and ticket outlets only, all of the above, and so on).\n\nWhere POIs are geographically dispersed they are returned in a list; where they are geographically concentrated they can be returned in a cluster, depending on the map griddepth that is sent in the request.\n\nHave a play around with the `griddepth` parameter to see what best suits the device you are developing for. If you set griddepth to zero it will not cluster.\n\nYou can also set a limit of how many stops are listed in a cluster. The API will return what the total number of POIs is, however it will only return data for as many POIs are set by the `limit`. \n\nWhen there are more POIs in a cluster than the `limit`, the POIs returned will be determined by a business rule that is hard coded at the server end. The order of priority is V/Line stops first, followed by train, tram, bus, NightRider and, last of all, ticket outlets.\n",
+                "description": "Transport POIs by Map returns a set of locations consisting of stops and/or myki ticket outlets (collectively known as points of interest – i.e. POIs) within a region demarcated on a map through a set of latitude and longitude coordinates.\n\nThrough the poi parameter, the API can return any combination of POIs (e.g. ticket outlets only, bus stops only, tram stops and ticket outlets only, all of the above, and so on).\n\nWhere POIs are geographically dispersed they are returned in a list; where they are geographically concentrated they can be returned in a cluster, depending on the map griddepth that is sent in the request.\n\nHave a play around with the `griddepth` parameter to see what best suits the device you are developing for. If you set griddepth to zero it will not cluster.\n\nYou can also set a limit of how many stops are listed in a cluster. The API will return what the total number of POIs is, however it will only return data for as many POIs are set by the `limit`. \n\nWhen there are more POIs in a cluster than the `limit`, the POIs returned will be determined by a business rule that is hard coded at the server end. The order of priority is V/Line stops first, followed by train, tram, bus, NightRider and, last of all, ticket outlets.\n\n### Response\nReturns a list of JSON objects which are either `locations` or `clusters`; `clusters` have their own list of `locations` within them. `locations` have either a `stop` or `outlet` (i.e. ticket outlet) object embedded within them. For more information on the data structures, check out the JSON object structure.\n",
                 "parameters": [
                     {
                         "name": "poi",
@@ -514,35 +608,35 @@
                     {
                         "name": "latitude1",
                         "type": "number",
-                        "description": "latitude at the top left corner of a region depicted on a map, expressed in decimal degrees.",
+                        "description": "northern latitude of the bounding box, expressed in decimal degrees.",
                         "in": "path",
                         "required": true
                     },
                     {
                         "name": "latitude2",
                         "type": "number",
-                        "description": "latitude at the bottom right corner of a region depicted on a map, expressed in decimal degrees.",
+                        "description": "southern latitude of the bounding box, expressed in decimal degrees.",
                         "in": "path",
                         "required": true
                     },
                     {
                         "name": "longitude1",
                         "type": "number",
-                        "description": "longitude at the top left corner of a region depicted on a map, expressed in decimal degrees.",
+                        "description": "western longitude of the bounding box, expressed in decimal degrees.",
                         "in": "path",
                         "required": true
                     },
                     {
                         "name": "longitude2",
                         "type": "number",
-                        "description": "longitude at the bottom right corner of a region depicted on a map, expressed in decimal degrees.",
+                        "description": "eastern longitude of the boounding box, expressed in decimal degrees.",
                         "in": "path",
                         "required": true
                     },
                     {
                         "name": "griddepth",
                         "type": "integer",
-                        "description": "the number of cells per block of cluster grid (between 0-20 inclusive).",
+                        "description": "the number of cells per block of cluster grid (0-20 inclusive).",
                         "in": "path",
                         "required": true
                     },
@@ -562,7 +656,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns a list of JSON objects which are either `locations` or `clusters`; `clusters` have their own list of `locations` within them. `locations` have either a `stop` or `outlet` (i.e. ticket outlet) object embedded within them. For more information on the data structures, check out the JSON object structure.",
+                        "description": "",
                         "schema": {
                             "title": "Success",
                             "type": "object",
@@ -653,7 +747,7 @@
         "/v2/search/{searchtext}": {
             "get": {
                 "summary": "Search",
-                "description": "The Search API returns all stops and lines that match the input search text.         \n\nNote: It will only return “line” objects if the input search text is less than three (3) characters.\n",
+                "description": "The Search API returns all stops and lines that match the input search text.         \n\nNote: It will only return “line” objects if the input search text is less than three (3) characters.\n\n### Response\nReturns an array of JSON \"result\" objects for which the `type` equals either `stop` or `line`. \nA `stop` object or `line` object is embedded within each \"result\" depending on its type. \n",
                 "parameters": [
                     {
                         "name": "searchtext",
@@ -671,7 +765,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns an array of JSON \"result\" objects for which the `type` equals either `stop` or `line`. \nA `stop` object or `line` object is embedded within each \"result\" depending on its type. \nFor more information on the data structures, check out the JSON object structure.\n",
+                        "description": "",
                         "schema": {
                             "title": "Results",
                             "type": "array",
@@ -706,10 +800,46 @@
                 }
             }
         },
+        "/v2/lines/mode/{mode}": {
+            "get": {
+                "summary": "Lines by Mode",
+                "description": "Lines by Mode returns the lines for a selected mode of transport.\n\n**Note** Only one transport type can be queried at a time through the Lines by Mode API.\n\n**Note** The optional parametername allows you to filter on a specific line.\n",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/mode"
+                    },
+                    {
+                        "name": "name",
+                        "description": "Part of a line’s name e.g. “Alamein”, “Highpoint”\n",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "$ref": "#/parameters/devid"
+                    },
+                    {
+                        "$ref": "#/parameters/signature"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "title": "Lines",
+                            "description": "List of lines matching the query",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/line"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/v2/mode/{mode}/stop/{stop}/departures/by-destination/limit/{limit}": {
             "get": {
                 "summary": "Broad Next Departures",
-                "description": "Broad Next Departures returns the next departure times at a prescribed stop irrespective \nof the line and direction of the service. For example, if the stop is Camberwell Station,\nBroad Next Departures will return the times for all three lines (Belgrave, Lilydale and\nAlamein) running in both directions (towards the city and away from the city).\n",
+                "description": "Broad Next Departures returns the next departure times at a prescribed stop irrespective \nof the line and direction of the service. For example, if the stop is Camberwell Station,\nBroad Next Departures will return the times for all three lines (Belgrave, Lilydale and\nAlamein) running in both directions (towards the city and away from the city).\n\nThrough the `limit` parameter you can choose to return the very next departure or all departures for the day from that point in time.\n\n\n### Real-time data\n\nResults now include real-time data for tram and bus serviceswhere this data is made available to PTV. As at the date of this document, real-time data is available on all tram services in Melbourne. Work has also commenced to deliver real-time data for bus services in Melbourne; this work will continue progressively in metropolitan and regional Victoria. \n\n**No real-time data feeds are provided for services other than tram and bus.**\n\nWe have implemented a throttling mechanism to protect our external suppliers of real-time data. As a result, the API may not return real-time tram and bus data in its response (all other data will continue to be made available).\n\nNo real-time data is returned if the limit is set to `0` (zero). \n\n### Response\n\nReturns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object\nembedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in\nthem, and the \"direction\" object has a \"line\" object within it.\n",
                 "parameters": [
                     {
                         "$ref": "#/parameters/mode"
@@ -729,7 +859,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object embedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in them, and the \"direction\" object has a \"line\" object within it.",
+                        "description": "",
                         "schema": {
                             "title": "Departures",
                             "type": "object",
@@ -774,9 +904,9 @@
                                                 "destination_id": 1224,
                                                 "destination_name": "South Morang"
                                             },
-                                            "time_timetable_utc": 2014,
+                                            "time_timetable_utc": "2014-01-20T03:21:00.000Z",
                                             "time_realtime_utc": null,
-                                            "flags": null
+                                            "flags": ""
                                         }
                                     ]
                                 }
@@ -789,7 +919,7 @@
         "/v2/mode/{mode}/line/{line}/stop/{stop}/directionid/{directionid}/departures/all/limit/{limit}": {
             "get": {
                 "summary": "Specific Next Departures",
-                "description": "Specific Next Departures returns the times for the next departures at a prescribed stop for\na specific mode, line and direction. For example, if the stop is Camberwell Station,\nSpecific Next Departures returns only the times for one line running in one direction (for\nexample, the Belgrave line running towards the city).\n",
+                "description": "Specific Next Departures returns the times for the next departures at a prescribed stop for\na specific mode, line and direction. For example, if the stop is Camberwell Station,\nSpecific Next Departures returns only the times for one line running in one direction (for\nexample, the Belgrave line running towards the city).\n\n**See also** notes at Broad Next Departures.\n\n### Response\n\nReturns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object\nembedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in\nthem, and the \"direction\" object has a \"line\" object within it.\n",
                 "parameters": [
                     {
                         "$ref": "#/parameters/mode"
@@ -822,58 +952,68 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object embedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in them, and the \"direction\" object has a \"line\" object within it.",
+                        "description": "",
                         "schema": {
-                            "title": "Departures",
-                            "type": "object",
-                            "required": [
-                                "values"
-                            ],
-                            "properties": {
-                                "values": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/timetable_value"
-                                    },
-                                    "example": [
-                                        {
-                                            "platform": {
-                                                "realtime_id": 0,
-                                                "stop": {
-                                                    "suburb": "East Melbourne",
-                                                    "transport_type": "train",
-                                                    "stop_id": 1104,
-                                                    "location_name": "Jolimont-MCG",
-                                                    "lat": -37.81653,
-                                                    "lon": 144.9841,
-                                                    "distance": 0
-                                                },
-                                                "direction": {
-                                                    "linedir_id": 41,
-                                                    "direction_id": 8,
-                                                    "direction_name": "Hurstbridge",
-                                                    "line": {
-                                                        "transport_type": "train",
-                                                        "line_id": 8,
-                                                        "line_name": "Hurstbridge",
-                                                        "line_number": "Hurstbridge"
-                                                    }
-                                                }
-                                            },
-                                            "run": {
-                                                "transport_type": "train",
-                                                "run_id": 21172,
-                                                "num_skipped": 0,
-                                                "destination_id": 1041,
-                                                "destination_name": "Clifton Hill"
-                                            },
-                                            "time_timetable_utc": "2014-01-20T03:21:00.000Z",
-                                            "time_realtime_utc": null,
-                                            "flags": null
-                                        }
-                                    ]
-                                }
-                            }
+                            "$ref": "#/definitions/departures"
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/mode/{GTFS_mode}/route_id/{GTFS_route}/stop/{GTFS_stop}/direction/{GTFS_direction}/departures/all/limit/{limit}": {
+            "get": {
+                "summary": "Specific Next Departures (GTFS Input)",
+                "description": "The new Specific Next Departures (GTFS Input) API returns the same data as Specific Next Departures, namely the times for the next departures at a prescribed stop for a specific mode, line and direction. Unlike Specific next Departures, however, it uses data inputs from the PTV GTFS dataset.\n\nResults include real-time data for tram and bus services where this data is made available to PTV.\n\n**See also** notes at Broad Next Departures.\n\nThe public transport data accessed through the PTV Timetable API and in the PTV GTFS dataset includes attributes with the same name that hold different data. For example, “stop_id” exists in both datasets but an API stop_id is different to a GTFS stop_id.\n\nOnly the Specific Next Departures (GTFS Input) API uses the GTFS data – all other calls in the PTV Timetable API do not accept GTFS inputs.\n\n### Response        \nReturns an identical response to the Specific Next Departures API.\n\n**Note** The response will be PTV Timetable API JSON objects – not GTFS objects\n",
+                "parameters": [
+                    {
+                        "name": "GTFS_mode",
+                        "in": "path",
+                        "type": "string",
+                        "description": "the GTFS servicemode of the stop, taken from the PTV GTFS dataset. GTFS service mode is defined in the PTV GTFS Release Notes available on the DataVic website.",
+                        "required": true
+                    },
+                    {
+                        "name": "GTFS_route",
+                        "description": "the GTFS route_id of the stop, taken from the PTV GTFS dataset e.g. “4-364-mjp-1”. Available within the trips.txt files.",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "GTFS_stop",
+                        "description": "The GTFS stop_id of the stop, taken from the PTV GTFS dataset e.g. “19943”.  Available within the stop.txt files in the PTV GTFS dataset,",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "GTFS_direction",
+                        "description": "The GTFS direction_id of the stop, taken from the PTV GTFS dataset e.g. “0” Available within the trips.txt files.",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "type": "integer",
+                        "required": true
+                    },
+                    {
+                        "$ref": "#/parameters/for_utc"
+                    },
+                    {
+                        "$ref": "#/parameters/devid"
+                    },
+                    {
+                        "$ref": "#/parameters/signature"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/departures"
                         }
                     }
                 }
@@ -882,7 +1022,7 @@
         "/v2/mode/{mode}/run/{run}/stop/{stop}/stopping-pattern": {
             "get": {
                 "summary": "Stopping Pattern",
-                "description": "The Stopping Pattern API returns the stopping pattern for a specific run (i.e. transport\nservice) from a prescribed stop at a prescribed time. The stopping pattern is comprised of\ntimetable values ordered by stopping order.\n\nReturns a collection of JSON timetable `values` that have a `platform` and `run` object\nembedded within them. The `platform` objects have a `stop` and `direction` object in\nthem, and the `direction` object has a `line` object within it.\n",
+                "description": "The Stopping Pattern API returns the stopping pattern for a specific run (i.e. transport\nservice) from a prescribed stop at a prescribed time. The stopping pattern is comprised of\ntimetable values ordered by stopping order.\n\n### Response\n\nReturns a collection of JSON timetable `values` that have a `platform` and `run` object\nembedded within them. The `platform` objects have a `stop` and `direction` object in\nthem, and the `direction` object has a `line` object within it.\n",
                 "parameters": [
                     {
                         "$ref": "#/parameters/mode"
@@ -969,7 +1109,7 @@
         "/v2/mode/{mode}/line/{line}/stops-for-line": {
             "get": {
                 "summary": "Stops on a Line",
-                "description": "The Stops on a Line API returns a list of all the stops for a requested line, ordered by\nlocation name.\n",
+                "description": "The Stops on a Line API returns a list of all the stops for a requested line, ordered by\nlocation name.\n\n### Response\n\nReturns a collection of JSON \"stop\" objects ordered by `location_name`\n",
                 "parameters": [
                     {
                         "$ref": "#/parameters/mode"
@@ -986,7 +1126,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns a collection of JSON \"stop\" objects ordered by `location_name`\n",
+                        "description": "",
                         "schema": {
                             "title": "Stops",
                             "type": "array",
@@ -1004,6 +1144,59 @@
                                     "distance": 0
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/v2/disruptions/modes/{modes}": {
+            "get": {
+                "summary": "Disruptions",
+                "description": "The Disruptions API returns information on planned and unplanned disruptions for selected modes of transport.\n\n**Note** The disruption information provided is the same information that is made available by PTV through its digital channels; it is not an exhaustive list of all disruptions affecting public transport.\n\n### Response\n\nReturns a list of JSON mode objects – i.e. objects named after the possible transport modes\nwhich are passed: a “general” object, a “metro-bus” object, a “metro-train” object, a “metrotram”\nobject, a “regional-bus” object, a “regional-coach” objectanda “regional-train” object.\n\nEach of these mode objects has a collection of “disruption information” objects within it (or, it\nmay be empty if there is no disruption information at the time of the request).\n",
+                "parameters": [
+                    {
+                        "name": "modes",
+                        "in": "path",
+                        "type": "string",
+                        "description": "A comma separated list of modes of transport for which disruption information is returned; possible values are:\n\ngeneral\nmetro-bus\nmetro-train\nmetro-tram\nregional-bus\nregional-coach\nregional-train\n\nWhere “general” represents disruption information affecting two or more modes\n\ne.g. “regional-train,regional-coach” would return planned disruption information\nfor V/Line rail and coach services\n",
+                        "required": true
+                    },
+                    {
+                        "$ref": "#/parameters/devid"
+                    },
+                    {
+                        "$ref": "#/parameters/signature"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "title": "DisruptionsResponse",
+                            "type": "object",
+                            "properties": {
+                                "general": {
+                                    "$ref": "#/definitions/disruptions"
+                                },
+                                "metro-train": {
+                                    "$ref": "#/definitions/disruptions"
+                                },
+                                "metro-tram": {
+                                    "$ref": "#/definitions/disruptions"
+                                },
+                                "metro-bus": {
+                                    "$ref": "#/definitions/disruptions"
+                                },
+                                "regional-train": {
+                                    "$ref": "#/definitions/disruptions"
+                                },
+                                "regional-coach": {
+                                    "$ref": "#/definitions/disruptions"
+                                },
+                                "regional-bus": {
+                                    "$ref": "#/definitions/disruptions"
+                                }
+                            }
                         }
                     }
                 }
