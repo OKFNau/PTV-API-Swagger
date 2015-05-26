@@ -326,13 +326,13 @@
             "properties": {
                 "time_table_utc": {
                     "type": "string",
-                    "format": "date",
+                    "format": "date-time",
                     "description": "the scheduled time of the service at the stop, in ISO 8601 UTC",
                     "example": "2014-11-18T03:21:00Z"
                 },
                 "time_realtime_utc": {
                     "type": "string",
-                    "format": "date",
+                    "format": "date-time",
                     "description": "the real-time of the service at the stop if this is available, in ISO 8601 UTC. Available for trams and some bus routes; if the relevant feed system is not available, it will return null",
                     "example": "2014-11-18T03:24:00Z"
                 },
@@ -386,7 +386,7 @@
                 },
                 "publishedOn": {
                     "type": "string",
-                    "format": "date",
+                    "format": "date-time",
                     "description": "the date and time the disruption information is published on the PTV website, in ISO 8601 UTC format",
                     "example": "“2014-01-29T23:30:54Z"
                 }
@@ -505,10 +505,10 @@
         "for_utc": {
             "name": "for_utc",
             "type": "string",
-            "format": "date",
+            "format": "date-time",
             "in": "query",
             "required": false,
-            "description": "the date and time of the request in ISO 8601 UTC format"
+            "description": "Get services from this date/time and later, in ISO 8601 UTC format"
         }
     },
     "paths": {
@@ -839,7 +839,7 @@
         "/v2/mode/{mode}/stop/{stop}/departures/by-destination/limit/{limit}": {
             "get": {
                 "summary": "Broad Next Departures",
-                "description": "Broad Next Departures returns the next departure times at a prescribed stop irrespective \nof the line and direction of the service. For example, if the stop is Camberwell Station,\nBroad Next Departures will return the times for all three lines (Belgrave, Lilydale and\nAlamein) running in both directions (towards the city and away from the city).\n\nThrough the `limit` parameter you can choose to return the very next departure or all departures for the day from that point in time.\n\n\n### Real-time data\n\nResults now include real-time data for tram and bus serviceswhere this data is made available to PTV. As at the date of this document, real-time data is available on all tram services in Melbourne. Work has also commenced to deliver real-time data for bus services in Melbourne; this work will continue progressively in metropolitan and regional Victoria. \n\n**No real-time data feeds are provided for services other than tram and bus.**\n\nWe have implemented a throttling mechanism to protect our external suppliers of real-time data. As a result, the API may not return real-time tram and bus data in its response (all other data will continue to be made available).\n\nNo real-time data is returned if the limit is set to `0` (zero). \n\n### Response\n\nReturns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object\nembedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in\nthem, and the \"direction\" object has a \"line\" object within it.\n",
+                "description": "Broad Next Departures returns the next departure times at a prescribed stop irrespective \nof the line and direction of the service. For example, if the stop is Camberwell Station,\nBroad Next Departures will return the times for all three lines (Belgrave, Lilydale and\nAlamein) running in both directions (towards the city and away from the city).\n\nThrough the `limit` parameter you can choose to return the very next departure or all departures for the day from that point in time.\n\n\n### Real-time data\n\nResults now include real-time data for tram and bus serviceswhere this data is made available to PTV. As at the date of this document, real-time data is available on all tram services in Melbourne. Work has also commenced to deliver real-time data for bus services in Melbourne; this work will continue progressively in metropolitan and regional Victoria. \n\n**No real-time data feeds are provided for services other than tram and bus.**\n\nWe have implemented a throttling mechanism to protect our external suppliers of real-time data. As a result, the API may not return real-time tram and bus data in its response (all other data will continue to be made available).\n\nNo real-time data is returned if the limit is set to `0` (zero). \n\n** Note** The `for_utc` parameter is not documented in the official PTV documentation.\n\n### Response\n\nReturns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object\nembedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in\nthem, and the \"direction\" object has a \"line\" object within it.\n",
                 "parameters": [
                     {
                         "$ref": "#/parameters/mode"
@@ -849,6 +849,9 @@
                     },
                     {
                         "$ref": "#/parameters/stoplimit"
+                    },
+                    {
+                        "$ref": "#/parameters/for_utc"
                     },
                     {
                         "$ref": "#/parameters/devid"
