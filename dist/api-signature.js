@@ -43,11 +43,13 @@ function doCookies() {
 function devIdChange(ev) {
   var devid = $(this).val();
   $("input[name='devid']").each(function(i, e) {
-    $(e).val(devid); 
+    if ($(e).val() != devid) {
+      $(e).val(devid); 
+      $(e).trigger("change");  
+    }
   });
 
   setCookie("ptv_devid", devid, 7);
-  $("input[name='devid']").trigger("change");
 }
 
 function devKeyChange(ev) {
