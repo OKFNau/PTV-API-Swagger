@@ -20,7 +20,7 @@ function getURL(sandbox) {
     var pval = $(sandbox).find("input[name='" + param + "']").val();
     path = path.replace(params[i], encodeURIComponent(pval));
   }
-  console.log(path);
+  //console.log(path);
   return path;
 
   // elements = $($(".sandbox")[0]).find("input[name='timestamp']")
@@ -71,10 +71,10 @@ var paramBoxChange = function(sandbox, sigbox) {
   return function(e) {
     var devkey = $("#input_devkey").val(); 
     var call = getURL(sandbox);
-    console.log("Get HMAC of: " + call);
+    //console.log("Get HMAC of: " + call);
     var shaObj = new jsSHA(call, "TEXT");
     var hmac = shaObj.getHMAC(devkey, "TEXT", "SHA-1", "HEX");
-    console.log("Result: " + hmac);
+    //console.log("Result: " + hmac);
     $(sigbox).val(hmac.toUpperCase());
   }
 }
