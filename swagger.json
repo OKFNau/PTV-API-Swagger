@@ -1155,7 +1155,7 @@
         "/v2/disruptions/modes/{modes}": {
             "get": {
                 "summary": "Disruptions",
-                "description": "The Disruptions API returns information on planned and unplanned disruptions for selected modes of transport.\n\n**Note** The disruption information provided is the same information that is made available by PTV through its digital channels; it is not an exhaustive list of all disruptions affecting public transport.\n\n### Response\n\nReturns a list of JSON mode objects – i.e. objects named after the possible transport modes\nwhich are passed: a “general” object, a “metro-bus” object, a “metro-train” object, a “metrotram”\nobject, a “regional-bus” object, a “regional-coach” objectanda “regional-train” object.\n\nEach of these mode objects has a collection of “disruption information” objects within it (or, it\nmay be empty if there is no disruption information at the time of the request).\n",
+                "description": "The Disruptions API returns information on planned and unplanned disruptions for selected modes of transport.\n\n**Note** The disruption information provided is the same information that is made available by PTV through its digital channels; it is not an exhaustive list of all disruptions affecting public transport.\n\n### Response\n\nReturns a list of JSON mode objects – i.e. objects named after the possible transport modes\nwhich are passed: a `general` object, a `metro-bus` object, a `metro-train` object, a `metro-tram`\nobject, a `regional-bus` object, a `regional-coach` object and a `regional-train` object.\n\nEach of these mode objects has a collection of disruption information objects within it (or, it\nmay be empty if there is no disruption information at the time of the request).\n",
                 "parameters": [
                     {
                         "name": "modes",
@@ -1199,6 +1199,16 @@
                                 "regional-bus": {
                                     "$ref": "#/definitions/disruptions"
                                 }
+                            },
+                            "example": {
+                                "metro-train": [
+                                    {
+                                        "title": "Buses replacing trains on the Cranbourne and Pakenham lines after 8.45pm: Saturday 15 February 2014",
+                                        "url": "http://ptv.vic.gov.au/disruptions/buses-replacing-trains-on-thecranbourne-and-pakenham-lines-after-8-45pm-saturday-15-february-2014/",
+                                        "description": "Due to signalling upgrades and construction work as part of the Springvale Level Crossing Removal, buses will replace all trains between Westall and Dandenong after 8.45pm on Saturday 15 February.",
+                                        "publishedOn": "2014-01-29T23:30:54.000Z"
+                                    }
+                                ]
                             }
                         }
                     }
