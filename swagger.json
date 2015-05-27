@@ -208,7 +208,8 @@
         },
         "line_id": {
             "type": "string",
-            "description": "(numeric string) the unique identifier of each line"
+            "description": "(numeric string) the unique identifier of each line",
+            "example": 1818
         },
         "line_name": {
             "type": "string",
@@ -226,7 +227,7 @@
                     "$ref": "#/definitions/transport_type"
                 },
                 "line_id": {
-                    "$ref": "#/definitions/line"
+                    "$ref": "#/definitions/line_id"
                 },
                 "line_name": {
                     "$ref": "#/definitions/line_name"
@@ -479,7 +480,7 @@
             "in": "path",
             "type": "string",
             "required": true,
-            "description": "A number representing the `transport_type` of the stop, defined as follows:\n\n  * `0` Train (metropolitan)\n  * `1` Tram\n  * `2` Bus (metropolitan and regional, but not V/Line)\n  * `3` V/Line train and coach\n  * `4` NightRider\n"
+            "description": "A number as follows:\n\n  * `0` Train (metropolitan)\n  * `1` Tram\n  * `2` Bus (metropolitan and regional, but not V/Line)\n  * `3` V/Line train and coach\n  * `4` NightRider\n"
         },
         "stop": {
             "name": "stop",
@@ -515,6 +516,9 @@
         "/v2/healthcheck": {
             "get": {
                 "summary": "Health Check",
+                "tags": [
+                    "General"
+                ],
                 "description": "A check on the timely availability, connectivity and reachability of the services that deliver security, caching and data to web clients. A health status report is returned.\n\n### Signature\nEvery API call, including this one, requires a \"signature\" parameter. This is an         \nuppercase HMAC-SHA1 hash of the whole request, computed as `crypto.HMACSHA1(request,key).toUppercase()`, where:\n  * `request` is the URL from `/v2` up to and including the `devid=` parameter\n  * `key` is your private API key\n",
                 "parameters": [
                     {
@@ -565,6 +569,9 @@
             "get": {
                 "summary": "Stops Nearby",
                 "description": "Stops Nearby returns up to 30 stops nearest to a specified coordinate. \"Stops\" includes train stations as well as tram and bus stops.\n\nThere are no spatial constraints on how Stops Nearby retrieves stops. It will always return up to 30 stops near the passed latitude and longitude coordinates, even if some of those stops are (relatively) far away.\n",
+                "tags": [
+                    "Search"
+                ],
                 "parameters": [
                     {
                         "$ref": "#/parameters/latitude"
@@ -596,6 +603,9 @@
         "/v2/poi/{poi}/lat1/{latitude1}/long1/{longitude1}/lat2/{latitude2}/long2/{longitude2}/griddepth/{griddepth}/limit/{limit}": {
             "get": {
                 "summary": "Transport POIs by Map",
+                "tags": [
+                    "Search"
+                ],
                 "description": "Transport POIs by Map returns a set of locations consisting of stops and/or myki ticket outlets (collectively known as points of interest – i.e. POIs) within a region demarcated on a map through a set of latitude and longitude coordinates.\n\nThrough the poi parameter, the API can return any combination of POIs (e.g. ticket outlets only, bus stops only, tram stops and ticket outlets only, all of the above, and so on).\n\nWhere POIs are geographically dispersed they are returned in a list; where they are geographically concentrated they can be returned in a cluster, depending on the map griddepth that is sent in the request.\n\nHave a play around with the `griddepth` parameter to see what best suits the device you are developing for. If you set griddepth to zero it will not cluster.\n\nYou can also set a limit of how many stops are listed in a cluster. The API will return what the total number of POIs is, however it will only return data for as many POIs are set by the `limit`. \n\nWhen there are more POIs in a cluster than the `limit`, the POIs returned will be determined by a business rule that is hard coded at the server end. The order of priority is V/Line stops first, followed by train, tram, bus, NightRider and, last of all, ticket outlets.\n\n### Response\nReturns a list of JSON objects which are either `locations` or `clusters`; `clusters` have their own list of `locations` within them. `locations` have either a `stop` or `outlet` (i.e. ticket outlet) object embedded within them. For more information on the data structures, check out the JSON object structure.\n",
                 "parameters": [
                     {
@@ -747,6 +757,9 @@
         "/v2/search/{searchtext}": {
             "get": {
                 "summary": "Search",
+                "tags": [
+                    "Search"
+                ],
                 "description": "The Search API returns all stops and lines that match the input search text.         \n\nNote: It will only return “line” objects if the input search text is less than three (3) characters.\n\n### Response\nReturns an array of JSON \"result\" objects for which the `type` equals either `stop` or `line`. \nA `stop` object or `line` object is embedded within each \"result\" depending on its type. \n",
                 "parameters": [
                     {
@@ -803,7 +816,10 @@
         "/v2/lines/mode/{mode}": {
             "get": {
                 "summary": "Lines by Mode",
-                "description": "Lines by Mode returns the lines for a selected mode of transport.\n\n**Note** Only one transport type can be queried at a time through the Lines by Mode API.\n\n**Note** The optional parametername allows you to filter on a specific line.\n",
+                "tags": [
+                    "Search"
+                ],
+                "description": "Lines by Mode returns the lines for a selected mode of transport.\n\n**Note** Only one transport type can be queried at a time through the Lines by Mode API.\n\n**Note** The optional parameter `name` allows you to filter on a specific line.\n",
                 "parameters": [
                     {
                         "$ref": "#/parameters/mode"
@@ -839,6 +855,9 @@
         "/v2/mode/{mode}/stop/{stop}/departures/by-destination/limit/{limit}": {
             "get": {
                 "summary": "Broad Next Departures",
+                "tags": [
+                    "Timetable"
+                ],
                 "description": "Broad Next Departures returns the next departure times at a prescribed stop irrespective \nof the line and direction of the service. For example, if the stop is Camberwell Station,\nBroad Next Departures will return the times for all three lines (Belgrave, Lilydale and\nAlamein) running in both directions (towards the city and away from the city).\n\nThrough the `limit` parameter you can choose to return the very next departure or all departures for the day from that point in time.\n\n\n### Real-time data\n\nResults now include real-time data for tram and bus serviceswhere this data is made available to PTV. As at the date of this document, real-time data is available on all tram services in Melbourne. Work has also commenced to deliver real-time data for bus services in Melbourne; this work will continue progressively in metropolitan and regional Victoria. \n\n**No real-time data feeds are provided for services other than tram and bus.**\n\nWe have implemented a throttling mechanism to protect our external suppliers of real-time data. As a result, the API may not return real-time tram and bus data in its response (all other data will continue to be made available).\n\nNo real-time data is returned if the limit is set to `0` (zero). \n\n** Note** The `for_utc` parameter is not documented in the official PTV documentation.\n\n### Response\n\nReturns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object\nembedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in\nthem, and the \"direction\" object has a \"line\" object within it.\n",
                 "parameters": [
                     {
@@ -922,6 +941,9 @@
         "/v2/mode/{mode}/line/{line}/stop/{stop}/directionid/{directionid}/departures/all/limit/{limit}": {
             "get": {
                 "summary": "Specific Next Departures",
+                "tags": [
+                    "Timetable"
+                ],
                 "description": "Specific Next Departures returns the times for the next departures at a prescribed stop for\na specific mode, line and direction. For example, if the stop is Camberwell Station,\nSpecific Next Departures returns only the times for one line running in one direction (for\nexample, the Belgrave line running towards the city).\n\n**See also** notes at Broad Next Departures.\n\n### Response\n\nReturns a collection of JSON timetable \"values\" that have a \"platform\" and \"run\" object\nembedded within them. The \"platform\" objects have a \"stop\" and \"direction\" object in\nthem, and the \"direction\" object has a \"line\" object within it.\n",
                 "parameters": [
                     {
@@ -965,6 +987,9 @@
         },
         "/v2/mode/{GTFS_mode}/route_id/{GTFS_route}/stop/{GTFS_stop}/direction/{GTFS_direction}/departures/all/limit/{limit}": {
             "get": {
+                "tags": [
+                    "Timetable"
+                ],
                 "summary": "Specific Next Departures (GTFS Input)",
                 "description": "The new Specific Next Departures (GTFS Input) API returns the same data as Specific Next Departures, namely the times for the next departures at a prescribed stop for a specific mode, line and direction. Unlike Specific next Departures, however, it uses data inputs from the PTV GTFS dataset.\n\nResults include real-time data for tram and bus services where this data is made available to PTV.\n\n**See also** notes at Broad Next Departures.\n\nThe public transport data accessed through the PTV Timetable API and in the PTV GTFS dataset includes attributes with the same name that hold different data. For example, “stop_id” exists in both datasets but an API stop_id is different to a GTFS stop_id.\n\nOnly the Specific Next Departures (GTFS Input) API uses the GTFS data – all other calls in the PTV Timetable API do not accept GTFS inputs.\n\n### Response        \nReturns an identical response to the Specific Next Departures API.\n\n**Note** The response will be PTV Timetable API JSON objects – not GTFS objects\n",
                 "parameters": [
@@ -1025,6 +1050,9 @@
         "/v2/mode/{mode}/run/{run}/stop/{stop}/stopping-pattern": {
             "get": {
                 "summary": "Stopping Pattern",
+                "tags": [
+                    "Timetable"
+                ],
                 "description": "The Stopping Pattern API returns the stopping pattern for a specific run (i.e. transport\nservice) from a prescribed stop at a prescribed time. The stopping pattern is comprised of\ntimetable values ordered by stopping order.\n\n### Response\n\nReturns a collection of JSON timetable `values` that have a `platform` and `run` object\nembedded within them. The `platform` objects have a `stop` and `direction` object in\nthem, and the `direction` object has a `line` object within it.\n",
                 "parameters": [
                     {
@@ -1112,6 +1140,9 @@
         "/v2/mode/{mode}/line/{line}/stops-for-line": {
             "get": {
                 "summary": "Stops on a Line",
+                "tags": [
+                    "Search"
+                ],
                 "description": "The Stops on a Line API returns a list of all the stops for a requested line, ordered by\nlocation name.\n\n### Response\n\nReturns a collection of JSON \"stop\" objects ordered by `location_name`\n",
                 "parameters": [
                     {
@@ -1155,6 +1186,9 @@
         "/v2/disruptions/modes/{modes}": {
             "get": {
                 "summary": "Disruptions",
+                "tags": [
+                    "General"
+                ],
                 "description": "The Disruptions API returns information on planned and unplanned disruptions for selected modes of transport.\n\n**Note** The disruption information provided is the same information that is made available by PTV through its digital channels; it is not an exhaustive list of all disruptions affecting public transport.\n\n### Response\n\nReturns a list of JSON mode objects – i.e. objects named after the possible transport modes\nwhich are passed: a `general` object, a `metro-bus` object, a `metro-train` object, a `metro-tram`\nobject, a `regional-bus` object, a `regional-coach` object and a `regional-train` object.\n\nEach of these mode objects has a collection of disruption information objects within it (or, it\nmay be empty if there is no disruption information at the time of the request).\n",
                 "parameters": [
                     {
