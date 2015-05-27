@@ -63,14 +63,24 @@
       text-decoration:none !important; 
     }
 
-    .endpoint {
+    .resource /* .endpoint */ {
       page-break-before: always;
     }
+    .resource  > .heading { font-size:24px !important; }
+
 
     li>.toggleOperation {
       font-size:36px;
     }
+
+    .sandbox_header, .response { display: none !important; }
   }
+
+  .response-content-type {
+    display: none !important;
+  }
+  h3 { width: 95% !important; } /* Required to allow word breaking. */
+  h3 .toggleOperation { word-wrap: break-word !important; }
 
 
   </style>
