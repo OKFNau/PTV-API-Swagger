@@ -1,0 +1,1 @@
+dist/sha1.js
